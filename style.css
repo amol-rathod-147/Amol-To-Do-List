@@ -5,22 +5,61 @@ body {
     padding: 20px;
   }
 
-  h1 {
+  .heading {
     background-color: #3f51b5;
     color: white;
-    padding: 10px;
-    border-radius: 5px;   
+    padding: 20px;
+    border-radius: 5px;
+    /* margin: 20px; */
+    height: 2.5cm;
+    display: flex;
+    flex-direction: row;
   }
+  h1{
+    color: white;
+    padding: 20px;
+    /* text-align: center; */
+    border-radius: 5px;
+    font-size: 30px;
+    /* margin-left: 100px; */
+  }
+  #searchBar{
+    width: 60%; 
+    height: 40%;
+    margin-left:12%;
+    margin-top:1%;
+    /* align-items: right; */
+    padding: 20px;
+    border: 2px solid #ccc; 
+    border-radius: 20px;
+    font-size: 25px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    transition: border-color 0.3s ease; 
+    align-items: right;  }
   .page{
     background-color: white;
     color: #333;
     padding: 20px;
     border-radius: 10px;
+    padding: 40px;
   }
+  .part2{
+    padding: 20px;
+    margin: 20px;
+ justify-content: center;
+    text-align: center;
+    border: 2px solid #ccc; 
+    border-radius: 20px;
+    font-size: 30px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    
+}
   input{
     background-color: white;
     border-color: #ccc;
     color: #333;
+    font-size: 20px;
+    padding:5px;
   }
   #addTaskButton {
     background-color: #3f51b5; 
