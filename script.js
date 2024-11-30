@@ -34,7 +34,6 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
 
     const today = new Date().toISOString().split('T')[0];
 
-    // Filter tasks based on the search query
     let filteredTasks = [];
     Object.keys(tasks).forEach(date => {
       tasks[date].forEach(taskObj => {
@@ -44,7 +43,6 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
       });
     });
 
-    // If no tasks match the search query
     if (filteredTasks.length === 0) {
       taskContainer.innerHTML = '<div>No tasks found.</div>';
       return;
@@ -56,42 +54,40 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
       todayTasks.forEach(task => {
         taskContainer.innerHTML += `
           <div class="task-item">
-            <span class="task-text">${task.taskObj.task} ${formatTime(task.taskObj.time)}</span>
+            <span class="task-text">${task.taskObj.task} at <span class="task-time"> ${formatTime(task.taskObj.time)}</span></span>
             <div class="task-buttons">
-              <button onclick="editTask('${task.date}', ${task.index})">Edit</button>
-              <button onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
+              <button class="edit-btn" onclick="editTask('${task.date}', ${task.index})">Edit</button>
+              <button class="delete-btn" onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
             </div>
           </div>`;
       });
     }
 
-    // Display Due Tasks (matching search)
     const dueTasks = filteredTasks.filter(task => task.date < today);
     if (dueTasks.length > 0) {
       taskContainer.innerHTML += '<div class="section-title">Due Tasks</div>';
       dueTasks.forEach(task => {
         taskContainer.innerHTML += `
           <div class="task-item">
-            <span class="task-text">${task.taskObj.task} ${formatTime(task.taskObj.time)}</span>
+            <span class="task-text">${task.taskObj.task} at <span class="task-time"> ${formatTime(task.taskObj.time)}</span></span>
             <div class="task-buttons">
-              <button onclick="editTask('${task.date}', ${task.index})">Edit</button>
-              <button onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
+              <button class="edit-btn" onclick="editTask('${task.date}', ${task.index})">Edit</button>
+              <button class="delete-btn" onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
             </div>
           </div>`;
       });
     }
 
-    // Display Upcoming Tasks (matching search)
     const upcomingTasks = filteredTasks.filter(task => task.date > today);
     if (upcomingTasks.length > 0) {
       taskContainer.innerHTML += '<div class="section-title">Upcoming Tasks</div>';
       upcomingTasks.forEach(task => {
         taskContainer.innerHTML += `
           <div class="task-item">
-            <span class="task-text">${task.taskObj.task} ${formatTime(task.taskObj.time)}</span>
+            <span class="task-text">${task.taskObj.task} at <span class="task-time"> ${formatTime(task.taskObj.time)}</span></span>
             <div class="task-buttons">
-              <button onclick="editTask('${task.date}', ${task.index})">Edit</button>
-              <button onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
+              <button class="edit-btn" onclick="editTask('${task.date}', ${task.index})">Edit</button>
+              <button class="delete-btn" onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
             </div>
           </div>`;
       });
