@@ -36,6 +36,16 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
       taskContainer.innerHTML += `<div>No tasks for today.</div>`;
     }
 
+    taskContainer.innerHTML += '<div class="section-title">Due Tasks</div>';
+    Object.keys(tasks).forEach(date => {
+      if (date <= today && date !== today) {
+        taskContainer.innerHTML += `<h4>${formatDate(date)}</h4>`;
+        tasks[date].forEach(taskObj => {
+          taskContainer.innerHTML += `<div>${taskObj.task} ${formatTime(taskObj.time)}</div>`;
+        });
+      }
+    });
+
   }
 
   const formatDate=(date)=> {
