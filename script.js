@@ -1,3 +1,10 @@
+let searchQuery = "";
+
+document.getElementById('searchBar').addEventListener('input', (e) => {
+    searchQuery = e.target.value.toLowerCase();
+    displayTasks();
+  });
+
 document.getElementById('addTaskButton').addEventListener('click', ()=> {
     const task = document.getElementById('taskInput').value.trim();
     const date = document.getElementById('taskDate').value;
@@ -27,49 +34,68 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
 
     const today = new Date().toISOString().split('T')[0];
 
-    taskContainer.innerHTML += '<div class="section-title">Today</div>';
-    if (tasks[today]) {
-      tasks[today].forEach((taskObj, index) => {
-        taskContainer.innerHTML += `
-          <div class="task-item">
-            <span class="task-text">${taskObj.task} ${formatTime(taskObj.time)}</span>
-              <button onclick="editTask('${today}', ${index})">Edit</button>
-              <button onclick="deleteTask('${today}', ${index})">Delete</button>
-          </div>`;
+    // Filter tasks based on the search query
+    let filteredTasks = [];
+    Object.keys(tasks).forEach(date => {
+      tasks[date].forEach(taskObj => {
+        if (taskObj.task.toLowerCase().includes(searchQuery)) {
+          filteredTasks.push({ date, taskObj });
+        }
       });
-    } else {
-      taskContainer.innerHTML += `<div>No tasks for today.</div>`;
+    });
+
+    // If no tasks match the search query
+    if (filteredTasks.length === 0) {
+      taskContainer.innerHTML = '<div>No tasks found.</div>';
+      return;
     }
 
-    taskContainer.innerHTML += '<div class="section-title">Due Tasks</div>';
-    Object.keys(tasks).forEach(date => {
-      if (date <= today && date !== today) {
-        taskContainer.innerHTML += `<h4>${formatDate(date)}</h4>`;
-        tasks[date].forEach((taskObj, index) => {
-          taskContainer.innerHTML += `
-            <div class="task-item">
-              <span class="task-text">${taskObj.task} ${formatTime(taskObj.time)}</span>
-                <button onclick="editTask('${date}', ${index})">Edit</button>
-                <button onclick="deleteTask('${date}', ${index})">Delete</button>
-            </div>`;
-        });
-      }
-    });
+    const todayTasks = filteredTasks.filter(task => task.date === today);
+    if (todayTasks.length > 0) {
+      taskContainer.innerHTML += '<div class="section-title">Today</div>';
+      todayTasks.forEach(task => {
+        taskContainer.innerHTML += `
+          <div class="task-item">
+            <span class="task-text">${task.taskObj.task} ${formatTime(task.taskObj.time)}</span>
+            <div class="task-buttons">
+              <button onclick="editTask('${task.date}', ${task.index})">Edit</button>
+              <button onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
+            </div>
+          </div>`;
+      });
+    }
 
-    taskContainer.innerHTML += '<div class="section-title">Upcoming Tasks</div>';
-    Object.keys(tasks).forEach(date => {
-      if (date > today) {
-        taskContainer.innerHTML += `<h4>${formatDate(date)}</h4>`;
-        tasks[date].forEach((taskObj, index) => {
-          taskContainer.innerHTML += `
-            <div class="task-item">
-              <span class="task-text">${taskObj.task} ${formatTime(taskObj.time)}</span>
-                <button onclick="editTask('${date}', ${index})">Edit</button>
-                <button onclick="deleteTask('${date}', ${index})">Delete</button>
-            </div>`;
-        });
-      }
-    });
+    // Display Due Tasks (matching search)
+    const dueTasks = filteredTasks.filter(task => task.date < today);
+    if (dueTasks.length > 0) {
+      taskContainer.innerHTML += '<div class="section-title">Due Tasks</div>';
+      dueTasks.forEach(task => {
+        taskContainer.innerHTML += `
+          <div class="task-item">
+            <span class="task-text">${task.taskObj.task} ${formatTime(task.taskObj.time)}</span>
+            <div class="task-buttons">
+              <button onclick="editTask('${task.date}', ${task.index})">Edit</button>
+              <button onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
+            </div>
+          </div>`;
+      });
+    }
+
+    // Display Upcoming Tasks (matching search)
+    const upcomingTasks = filteredTasks.filter(task => task.date > today);
+    if (upcomingTasks.length > 0) {
+      taskContainer.innerHTML += '<div class="section-title">Upcoming Tasks</div>';
+      upcomingTasks.forEach(task => {
+        taskContainer.innerHTML += `
+          <div class="task-item">
+            <span class="task-text">${task.taskObj.task} ${formatTime(task.taskObj.time)}</span>
+            <div class="task-buttons">
+              <button onclick="editTask('${task.date}', ${task.index})">Edit</button>
+              <button onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
+            </div>
+          </div>`;
+      });
+    }
   }
   const editTask = (date, index) => {
     const tasks = JSON.parse(localStorage.getItem('tasks'));
