@@ -20,7 +20,7 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
     document.getElementById('taskTime').value = '';
   }
 
-  const displayTasks=()=> {
+  const displayTasks = () => {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || {};
     const taskContainer = document.getElementById('taskContainer');
     taskContainer.innerHTML = '';
@@ -29,8 +29,15 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
 
     taskContainer.innerHTML += '<div class="section-title">Today</div>';
     if (tasks[today]) {
-      tasks[today].forEach(taskObj => {
-        taskContainer.innerHTML += `<div>${taskObj.task} ${formatTime(taskObj.time)}</div>`;
+      tasks[today].forEach((taskObj, index) => {
+        taskContainer.innerHTML += `
+          <div class="task-item">
+            <span class="task-text">${taskObj.task} ${formatTime(taskObj.time)}</span>
+            <div class="task-buttons">
+              <button onclick="editTask('${today}', ${index})">Edit</button>
+              <button onclick="deleteTask('${today}', ${index})">Delete</button>
+            </div>
+          </div>`;
       });
     } else {
       taskContainer.innerHTML += `<div>No tasks for today.</div>`;
@@ -40,8 +47,13 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
     Object.keys(tasks).forEach(date => {
       if (date <= today && date !== today) {
         taskContainer.innerHTML += `<h4>${formatDate(date)}</h4>`;
-        tasks[date].forEach(taskObj => {
-          taskContainer.innerHTML += `<div>${taskObj.task} ${formatTime(taskObj.time)}</div>`;
+        tasks[date].forEach((taskObj, index) => {
+          taskContainer.innerHTML += `
+            <div class="task-item">
+              <span class="task-text">${taskObj.task} ${formatTime(taskObj.time)}</span>
+                <button onclick="editTask('${date}', ${index})">Edit</button>
+                <button onclick="deleteTask('${date}', ${index})">Delete</button>
+            </div>`;
         });
       }
     });
@@ -50,12 +62,16 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
     Object.keys(tasks).forEach(date => {
       if (date > today) {
         taskContainer.innerHTML += `<h4>${formatDate(date)}</h4>`;
-        tasks[date].forEach(taskObj => {
-          taskContainer.innerHTML += `<div>${taskObj.task} ${formatTime(taskObj.time)}</div>`;
+        tasks[date].forEach((taskObj, index) => {
+          taskContainer.innerHTML += `
+            <div class="task-item">
+              <span class="task-text">${taskObj.task} ${formatTime(taskObj.time)}</span>
+                <button onclick="editTask('${date}', ${index})">Edit</button>
+                <button onclick="deleteTask('${date}', ${index})">Delete</button>
+            </div>`;
         });
       }
     });
-
   }
 
   const formatDate=(date)=> {
