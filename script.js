@@ -33,10 +33,8 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
         taskContainer.innerHTML += `
           <div class="task-item">
             <span class="task-text">${taskObj.task} ${formatTime(taskObj.time)}</span>
-            <div class="task-buttons">
               <button onclick="editTask('${today}', ${index})">Edit</button>
               <button onclick="deleteTask('${today}', ${index})">Delete</button>
-            </div>
           </div>`;
       });
     } else {
@@ -73,6 +71,24 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
       }
     });
   }
+  const editTask = (date, index) => {
+    const tasks = JSON.parse(localStorage.getItem('tasks'));
+    const task = tasks[date][index];
+    document.getElementById('taskInput').value = task.task;
+    document.getElementById('taskDate').value = date;
+    document.getElementById('taskTime').value = task.time;
+    deleteTask(date, index);
+  }
+
+  const deleteTask = (date, index) => {
+    const tasks = JSON.parse(localStorage.getItem('tasks'));
+    tasks[date].splice(index, 1);
+    if (tasks[date].length === 0) {
+      delete tasks[date];
+    }
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    displayTasks();
+  }
 
   const formatDate=(date)=> {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -85,5 +101,6 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
     date.setHours(hour, minute);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
+
 
   window.onload = displayTasks;
