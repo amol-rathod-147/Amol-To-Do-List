@@ -25,16 +25,17 @@ document.getElementById('addTaskButton').addEventListener('click', ()=> {
     const taskContainer = document.getElementById('taskContainer');
     taskContainer.innerHTML = '';
 
-    Object.keys(tasks).forEach(date => {
-      const taskList = document.createElement('div');
-      taskList.innerHTML = `<h3>${formatDate(date)}</h3>`;
-      tasks[date].forEach(taskObj => {
-        const taskItem = document.createElement('div');
-        taskItem.textContent = `${taskObj.task} ${formatTime(taskObj.time)}`;
-        taskList.appendChild(taskItem);
+    const today = new Date().toISOString().split('T')[0];
+
+    taskContainer.innerHTML += '<div class="section-title">Today</div>';
+    if (tasks[today]) {
+      tasks[today].forEach(taskObj => {
+        taskContainer.innerHTML += `<div>${taskObj.task} ${formatTime(taskObj.time)}</div>`;
       });
-      taskContainer.appendChild(taskList);
-    });
+    } else {
+      taskContainer.innerHTML += `<div>No tasks for today.</div>`;
+    }
+
   }
 
   const formatDate=(date)=> {
