@@ -14,9 +14,12 @@
         <input type="text" id="taskInput" placeholder="Add your task here..">
         <input type="date" id="taskDate">
         <input type="time" id="taskTime">
-        <button type="submit" id="addTaskButton">Add Task</button></div>
-    </div>
-
+        <button type="submit" id="addTaskButton">Add Task</button>
+    </div></div>
+    <div id="alertMessage" class="alert hidden">
+        <span id="alertText">Please fill in all fields.</span>
+        <button id="closeAlert" onclick="closeAlert()">OK</button>
+      </div>
   <div id="taskContainer" class="task-list"></div>
 </div>
   <script src="script.js"></script>
