@@ -42,12 +42,14 @@ const clearFields = () => {
   document.getElementById('taskTime').value = '';
 };
 
+
 const displayTasks = () => {
   const tasks = JSON.parse(localStorage.getItem('tasks')) || {};
   const taskContainer = document.getElementById('taskContainer');
   taskContainer.innerHTML = '';
 
   const today = new Date().toISOString().split('T')[0];
+  const searchQuery = document.getElementById('searchBar').value.toLowerCase().trim();
 
   let filteredTasks = [];
   Object.keys(tasks).forEach(date => {
@@ -64,12 +66,15 @@ const displayTasks = () => {
   }
 
   const todayTasks = filteredTasks.filter(task => task.date === today);
+  const dueTasks = filteredTasks.filter(task => task.date < today);
+  const upcomingTasks = filteredTasks.filter(task => task.date > today);
+
   if (todayTasks.length > 0) {
     taskContainer.innerHTML += '<div class="section-title">Today</div>';
     todayTasks.forEach(task => {
       taskContainer.innerHTML += `
         <div class="task-item">
-          <span class="task-text">${task.taskObj.task} at <span class="task-time"> ${formatTime(task.taskObj.time)}</span></span>
+          <span class="task-text">${task.taskObj.task} at <span class="task-time">${formatTime(task.taskObj.time)}</span></span>
           <div class="task-buttons">
             <button class="edit-btn" onclick="editTask('${task.date}', ${task.index})">Edit</button>
             <button class="delete-btn" onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
@@ -78,13 +83,17 @@ const displayTasks = () => {
     });
   }
 
-  const dueTasks = filteredTasks.filter(task => task.date < today);
   if (dueTasks.length > 0) {
     taskContainer.innerHTML += '<div class="section-title">Due Tasks</div>';
+    let lastDate = '';
     dueTasks.forEach(task => {
+      if (task.date !== lastDate) {
+        taskContainer.innerHTML += `<h4>${formatDate(task.date)}</h4>`;
+        lastDate = task.date;
+      }
       taskContainer.innerHTML += `
         <div class="task-item">
-          <span class="task-text">${task.taskObj.task} at <span class="task-time"> ${formatTime(task.taskObj.time)}</span></span>
+          <span class="task-text">${task.taskObj.task} at <span class="task-time">${formatTime(task.taskObj.time)}</span></span>
           <div class="task-buttons">
             <button class="edit-btn" onclick="editTask('${task.date}', ${task.index})">Edit</button>
             <button class="delete-btn" onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
@@ -93,13 +102,17 @@ const displayTasks = () => {
     });
   }
 
-  const upcomingTasks = filteredTasks.filter(task => task.date > today);
   if (upcomingTasks.length > 0) {
     taskContainer.innerHTML += '<div class="section-title">Upcoming Tasks</div>';
+    let lastDate = '';
     upcomingTasks.forEach(task => {
+      if (task.date !== lastDate) {
+        taskContainer.innerHTML += `<h4>${formatDate(task.date)}</h4>`;
+        lastDate = task.date;
+      }
       taskContainer.innerHTML += `
         <div class="task-item">
-          <span class="task-text">${task.taskObj.task} at <span class="task-time"> ${formatTime(task.taskObj.time)}</span></span>
+          <span class="task-text">${task.taskObj.task} at <span class="task-time">${formatTime(task.taskObj.time)}</span></span>
           <div class="task-buttons">
             <button class="edit-btn" onclick="editTask('${task.date}', ${task.index})">Edit</button>
             <button class="delete-btn" onclick="deleteTask('${task.date}', ${task.index})">Delete</button>
@@ -108,6 +121,7 @@ const displayTasks = () => {
     });
   }
 };
+
 
 const editTask = (date, index) => {
     const tasks = JSON.parse(localStorage.getItem('tasks'));
